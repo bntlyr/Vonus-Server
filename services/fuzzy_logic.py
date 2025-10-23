@@ -1,6 +1,4 @@
 import numpy as np
-import skfuzzy as fuzz
-from skfuzzy import control as ctrl
 import os
 from typing import Dict, Tuple
 from dotenv import load_dotenv
@@ -10,19 +8,15 @@ load_dotenv()
 
 class FloodFuzzySystem:
     """
-    Fuzzy Logic System for Flood Risk Assessment
+    Simplified Fuzzy Logic System for Flood Risk Assessment
     
-    This system uses fuzzy inference to determine flood risk levels based on:
+    This system uses manual fuzzy inference to determine flood risk levels based on:
     - Rainfall intensity (mm/hr)
     - Soil saturation level (0.0-1.0)
     - Drainage capacity (0.0-1.0)
     """
     
     def __init__(self):
-        self.setup_fuzzy_variables()
-        self.setup_fuzzy_rules()
-        self.create_control_system()
-        
         # Load configuration from environment
         self.rainfall_threshold_low = float(os.getenv('RAINFALL_THRESHOLD_LOW', 30))
         self.rainfall_threshold_high = float(os.getenv('RAINFALL_THRESHOLD_HIGH', 80))
@@ -30,86 +24,98 @@ class FloodFuzzySystem:
         self.drainage_threshold_good = float(os.getenv('DRAINAGE_THRESHOLD_GOOD', 0.7))
         self.confidence_threshold = float(os.getenv('CONFIDENCE_THRESHOLD', 0.6))
     
-    def setup_fuzzy_variables(self):
-        """Define fuzzy variables and their membership functions"""
-        
-        # Input variables
-        self.rainfall = ctrl.Antecedent(np.arange(0, 201, 1), 'rainfall')
-        self.soil_saturation = ctrl.Antecedent(np.arange(0, 1.1, 0.01), 'soil_saturation')
-        self.drainage_capacity = ctrl.Antecedent(np.arange(0, 1.1, 0.01), 'drainage_capacity')
-        
-        # Output variable
-        self.flood_risk = ctrl.Consequent(np.arange(0, 101, 1), 'flood_risk')
-        
-        # Rainfall membership functions (mm/hr)
-        self.rainfall['light'] = fuzz.trimf(self.rainfall.universe, [0, 0, 40])
-        self.rainfall['moderate'] = fuzz.trimf(self.rainfall.universe, [20, 50, 80])
-        self.rainfall['heavy'] = fuzz.trimf(self.rainfall.universe, [60, 100, 140])
-        self.rainfall['extreme'] = fuzz.trimf(self.rainfall.universe, [120, 200, 200])
-        
-        # Soil saturation membership functions
-        self.soil_saturation['low'] = fuzz.trimf(self.soil_saturation.universe, [0, 0, 0.4])
-        self.soil_saturation['medium'] = fuzz.trimf(self.soil_saturation.universe, [0.2, 0.5, 0.8])
-        self.soil_saturation['high'] = fuzz.trimf(self.soil_saturation.universe, [0.6, 1.0, 1.0])
-        
-        # Drainage capacity membership functions
-        self.drainage_capacity['poor'] = fuzz.trimf(self.drainage_capacity.universe, [0, 0, 0.4])
-        self.drainage_capacity['fair'] = fuzz.trimf(self.drainage_capacity.universe, [0.2, 0.5, 0.8])
-        self.drainage_capacity['good'] = fuzz.trimf(self.drainage_capacity.universe, [0.6, 1.0, 1.0])
-        
-        # Flood risk membership functions
-        self.flood_risk['low'] = fuzz.trimf(self.flood_risk.universe, [0, 0, 30])
-        self.flood_risk['moderate'] = fuzz.trimf(self.flood_risk.universe, [10, 40, 70])
-        self.flood_risk['high'] = fuzz.trimf(self.flood_risk.universe, [50, 75, 90])
-        self.flood_risk['critical'] = fuzz.trimf(self.flood_risk.universe, [80, 100, 100])
+    def _triangular_membership(self, x: float, a: float, b: float, c: float) -> float:
+        """Calculate triangular membership function value"""
+        if x <= a or x >= c:
+            return 0.0
+        elif a < x <= b:
+            return (x - a) / (b - a)
+        elif b < x < c:
+            return (c - x) / (c - b)
+        else:
+            return 0.0
     
-    def setup_fuzzy_rules(self):
-        """Define fuzzy inference rules"""
+    def _get_rainfall_membership(self, rainfall: float) -> Dict[str, float]:
+        """Get membership values for rainfall categories"""
+        return {
+            'light': self._triangular_membership(rainfall, 0, 0, 40),
+            'moderate': self._triangular_membership(rainfall, 20, 50, 80),
+            'heavy': self._triangular_membership(rainfall, 60, 100, 140),
+            'extreme': self._triangular_membership(rainfall, 120, 200, 200)
+        }
+    
+    def _get_soil_membership(self, soil_saturation: float) -> Dict[str, float]:
+        """Get membership values for soil saturation categories"""
+        return {
+            'low': self._triangular_membership(soil_saturation, 0, 0, 0.4),
+            'medium': self._triangular_membership(soil_saturation, 0.2, 0.5, 0.8),
+            'high': self._triangular_membership(soil_saturation, 0.6, 1.0, 1.0)
+        }
+    
+    def _get_drainage_membership(self, drainage_capacity: float) -> Dict[str, float]:
+        """Get membership values for drainage capacity categories"""
+        return {
+            'poor': self._triangular_membership(drainage_capacity, 0, 0, 0.4),
+            'fair': self._triangular_membership(drainage_capacity, 0.2, 0.5, 0.8),
+            'good': self._triangular_membership(drainage_capacity, 0.6, 1.0, 1.0)
+        }
+    
+    def _apply_fuzzy_rules(self, rainfall_mem: Dict, soil_mem: Dict, drainage_mem: Dict) -> Dict[str, float]:
+        """Apply fuzzy rules and return risk level memberships"""
         
-        self.rules = [
-            # Low risk scenarios
-            ctrl.Rule(self.rainfall['light'] & self.soil_saturation['low'] & self.drainage_capacity['good'], 
-                     self.flood_risk['low']),
-            ctrl.Rule(self.rainfall['light'] & self.soil_saturation['medium'] & self.drainage_capacity['good'], 
-                     self.flood_risk['low']),
-            ctrl.Rule(self.rainfall['moderate'] & self.soil_saturation['low'] & self.drainage_capacity['good'], 
-                     self.flood_risk['low']),
-            
-            # Moderate risk scenarios
-            ctrl.Rule(self.rainfall['light'] & self.soil_saturation['high'] & self.drainage_capacity['fair'], 
-                     self.flood_risk['moderate']),
-            ctrl.Rule(self.rainfall['moderate'] & self.soil_saturation['medium'] & self.drainage_capacity['fair'], 
-                     self.flood_risk['moderate']),
-            ctrl.Rule(self.rainfall['moderate'] & self.soil_saturation['low'] & self.drainage_capacity['poor'], 
-                     self.flood_risk['moderate']),
-            ctrl.Rule(self.rainfall['heavy'] & self.soil_saturation['low'] & self.drainage_capacity['good'], 
-                     self.flood_risk['moderate']),
-            
-            # High risk scenarios
-            ctrl.Rule(self.rainfall['heavy'] & self.soil_saturation['medium'] & self.drainage_capacity['fair'], 
-                     self.flood_risk['high']),
-            ctrl.Rule(self.rainfall['heavy'] & self.soil_saturation['high'] & self.drainage_capacity['poor'], 
-                     self.flood_risk['high']),
-            ctrl.Rule(self.rainfall['moderate'] & self.soil_saturation['high'] & self.drainage_capacity['poor'], 
-                     self.flood_risk['high']),
-            ctrl.Rule(self.rainfall['extreme'] & self.soil_saturation['low'] & self.drainage_capacity['fair'], 
-                     self.flood_risk['high']),
-            
-            # Critical risk scenarios
-            ctrl.Rule(self.rainfall['extreme'] & self.soil_saturation['medium'] & self.drainage_capacity['poor'], 
-                     self.flood_risk['critical']),
-            ctrl.Rule(self.rainfall['extreme'] & self.soil_saturation['high'] & self.drainage_capacity['poor'], 
-                     self.flood_risk['critical']),
-            ctrl.Rule(self.rainfall['heavy'] & self.soil_saturation['high'] & self.drainage_capacity['poor'], 
-                     self.flood_risk['critical']),
-            ctrl.Rule(self.rainfall['extreme'] & self.soil_saturation['high'] & self.drainage_capacity['fair'], 
-                     self.flood_risk['critical']),
+        risk_memberships = {'low': 0, 'moderate': 0, 'high': 0, 'critical': 0}
+        
+        # Low risk scenarios
+        low_rules = [
+            min(rainfall_mem['light'], soil_mem['low'], drainage_mem['good']),
+            min(rainfall_mem['light'], soil_mem['medium'], drainage_mem['good']),
+            min(rainfall_mem['moderate'], soil_mem['low'], drainage_mem['good'])
         ]
+        risk_memberships['low'] = max(low_rules)
+        
+        # Moderate risk scenarios
+        moderate_rules = [
+            min(rainfall_mem['light'], soil_mem['high'], drainage_mem['fair']),
+            min(rainfall_mem['moderate'], soil_mem['medium'], drainage_mem['fair']),
+            min(rainfall_mem['moderate'], soil_mem['low'], drainage_mem['poor']),
+            min(rainfall_mem['heavy'], soil_mem['low'], drainage_mem['good'])
+        ]
+        risk_memberships['moderate'] = max(moderate_rules)
+        
+        # High risk scenarios
+        high_rules = [
+            min(rainfall_mem['heavy'], soil_mem['medium'], drainage_mem['fair']),
+            min(rainfall_mem['heavy'], soil_mem['high'], drainage_mem['poor']),
+            min(rainfall_mem['moderate'], soil_mem['high'], drainage_mem['poor']),
+            min(rainfall_mem['extreme'], soil_mem['low'], drainage_mem['fair'])
+        ]
+        risk_memberships['high'] = max(high_rules)
+        
+        # Critical risk scenarios
+        critical_rules = [
+            min(rainfall_mem['extreme'], soil_mem['medium'], drainage_mem['poor']),
+            min(rainfall_mem['extreme'], soil_mem['high'], drainage_mem['poor']),
+            min(rainfall_mem['heavy'], soil_mem['high'], drainage_mem['poor']),
+            min(rainfall_mem['extreme'], soil_mem['high'], drainage_mem['fair'])
+        ]
+        risk_memberships['critical'] = max(critical_rules)
+        
+        return risk_memberships
     
-    def create_control_system(self):
-        """Create the fuzzy control system"""
-        self.flood_ctrl = ctrl.ControlSystem(self.rules)
-        self.flood_simulation = ctrl.ControlSystemSimulation(self.flood_ctrl)
+    def _defuzzify(self, risk_memberships: Dict[str, float]) -> float:
+        """Convert fuzzy output to crisp risk score using centroid method"""
+        
+        # Center points for each risk category
+        centers = {'low': 15, 'moderate': 40, 'high': 70, 'critical': 90}
+        
+        # Calculate weighted average
+        numerator = sum(membership * centers[level] for level, membership in risk_memberships.items())
+        denominator = sum(risk_memberships.values())
+        
+        if denominator == 0:
+            return 15  # Default to low risk
+        
+        return numerator / denominator
     
     def predict_flood_risk(self, rainfall_mm: float, soil_saturation: float, 
                           drainage_capacity: float) -> Dict:
@@ -125,16 +131,21 @@ class FloodFuzzySystem:
             Dictionary containing risk level, confidence, and predicted depth
         """
         
-        # Set inputs
-        self.flood_simulation.input['rainfall'] = min(200, max(0, rainfall_mm))
-        self.flood_simulation.input['soil_saturation'] = min(1.0, max(0.0, soil_saturation))
-        self.flood_simulation.input['drainage_capacity'] = min(1.0, max(0.0, drainage_capacity))
+        # Normalize inputs
+        rainfall_mm = min(200, max(0, rainfall_mm))
+        soil_saturation = min(1.0, max(0.0, soil_saturation))
+        drainage_capacity = min(1.0, max(0.0, drainage_capacity))
         
-        # Compute result
-        self.flood_simulation.compute()
+        # Get membership values
+        rainfall_mem = self._get_rainfall_membership(rainfall_mm)
+        soil_mem = self._get_soil_membership(soil_saturation)
+        drainage_mem = self._get_drainage_membership(drainage_capacity)
         
-        # Get risk score (0-100)
-        risk_score = self.flood_simulation.output['flood_risk']
+        # Apply fuzzy rules
+        risk_memberships = self._apply_fuzzy_rules(rainfall_mem, soil_mem, drainage_mem)
+        
+        # Defuzzify to get risk score
+        risk_score = self._defuzzify(risk_memberships)
         
         # Convert to categorical risk level
         risk_level = self._get_risk_level(risk_score)
