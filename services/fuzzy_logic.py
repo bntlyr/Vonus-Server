@@ -1,4 +1,3 @@
-import numpy as np
 import os
 from typing import Dict, Tuple
 from dotenv import load_dotenv

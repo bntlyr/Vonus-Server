@@ -2,7 +2,6 @@ import json
 import os
 from typing import List, Dict, Optional
 from datetime import datetime
-import pandas as pd
 from .fuzzy_logic import flood_fuzzy_system
 
 
