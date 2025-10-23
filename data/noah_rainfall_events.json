@@ -1,0 +1,128 @@
+{
+  "data_source": "UP NOAH Rainfall Events (Simulated)",
+  "monitoring_station": "Quezon City Weather Station",
+  "coordinates": [14.6760, 121.0437],
+  "elevation_m": 75.2,
+  "last_updated": "2024-10-23T08:00:00Z",
+  "historical_events": [
+    {
+      "event_id": "NOAH-2024-001",
+      "date": "2024-10-15",
+      "weather_system": "Tropical Storm Kristine",
+      "duration_hours": 18,
+      "total_rainfall_mm": 287.5,
+      "peak_intensity_mm_hr": 42.8,
+      "hourly_data": [
+        {"hour": 1, "rainfall_mm": 5.2},
+        {"hour": 2, "rainfall_mm": 8.7},
+        {"hour": 3, "rainfall_mm": 12.4},
+        {"hour": 4, "rainfall_mm": 18.9},
+        {"hour": 5, "rainfall_mm": 25.6},
+        {"hour": 6, "rainfall_mm": 32.1},
+        {"hour": 7, "rainfall_mm": 38.4},
+        {"hour": 8, "rainfall_mm": 42.8},
+        {"hour": 9, "rainfall_mm": 39.2},
+        {"hour": 10, "rainfall_mm": 34.7},
+        {"hour": 11, "rainfall_mm": 28.3},
+        {"hour": 12, "rainfall_mm": 22.1},
+        {"hour": 13, "rainfall_mm": 15.8},
+        {"hour": 14, "rainfall_mm": 9.4},
+        {"hour": 15, "rainfall_mm": 6.2},
+        {"hour": 16, "rainfall_mm": 3.8},
+        {"hour": 17, "rainfall_mm": 2.1},
+        {"hour": 18, "rainfall_mm": 1.4}
+      ],
+      "flood_reports": [
+        {"location": "Commonwealth Avenue", "depth_m": 1.2, "duration_hours": 6},
+        {"location": "EDSA-Quezon Avenue", "depth_m": 0.8, "duration_hours": 4},
+        {"location": "Marikina River Bridge", "depth_m": 2.5, "duration_hours": 8}
+      ]
+    },
+    {
+      "event_id": "NOAH-2024-002",
+      "date": "2024-09-12",
+      "weather_system": "Southwest Monsoon Enhanced",
+      "duration_hours": 24,
+      "total_rainfall_mm": 198.3,
+      "peak_intensity_mm_hr": 28.7,
+      "hourly_data": [
+        {"hour": 1, "rainfall_mm": 3.2},
+        {"hour": 2, "rainfall_mm": 4.8},
+        {"hour": 3, "rainfall_mm": 6.1},
+        {"hour": 4, "rainfall_mm": 8.9},
+        {"hour": 5, "rainfall_mm": 12.4},
+        {"hour": 6, "rainfall_mm": 15.7},
+        {"hour": 7, "rainfall_mm": 19.2},
+        {"hour": 8, "rainfall_mm": 22.8},
+        {"hour": 9, "rainfall_mm": 25.1},
+        {"hour": 10, "rainfall_mm": 28.7},
+        {"hour": 11, "rainfall_mm": 26.3},
+        {"hour": 12, "rainfall_mm": 23.4},
+        {"hour": 13, "rainfall_mm": 20.1},
+        {"hour": 14, "rainfall_mm": 17.8},
+        {"hour": 15, "rainfall_mm": 14.2},
+        {"hour": 16, "rainfall_mm": 11.6},
+        {"hour": 17, "rainfall_mm": 9.3},
+        {"hour": 18, "rainfall_mm": 7.1},
+        {"hour": 19, "rainfall_mm": 5.4},
+        {"hour": 20, "rainfall_mm": 4.2},
+        {"hour": 21, "rainfall_mm": 3.1},
+        {"hour": 22, "rainfall_mm": 2.4},
+        {"hour": 23, "rainfall_mm": 1.8},
+        {"hour": 24, "rainfall_mm": 1.2}
+      ],
+      "flood_reports": [
+        {"location": "Project 8", "depth_m": 0.6, "duration_hours": 3},
+        {"location": "Fairview District", "depth_m": 0.9, "duration_hours": 5}
+      ]
+    },
+    {
+      "event_id": "NOAH-2020-003",
+      "date": "2020-11-12",
+      "weather_system": "Typhoon Ulysses",
+      "duration_hours": 12,
+      "total_rainfall_mm": 394.7,
+      "peak_intensity_mm_hr": 67.3,
+      "hourly_data": [
+        {"hour": 1, "rainfall_mm": 15.2},
+        {"hour": 2, "rainfall_mm": 28.4},
+        {"hour": 3, "rainfall_mm": 42.8},
+        {"hour": 4, "rainfall_mm": 58.1},
+        {"hour": 5, "rainfall_mm": 67.3},
+        {"hour": 6, "rainfall_mm": 62.9},
+        {"hour": 7, "rainfall_mm": 54.2},
+        {"hour": 8, "rainfall_mm": 38.7},
+        {"hour": 9, "rainfall_mm": 25.1},
+        {"hour": 10, "rainfall_mm": 12.8},
+        {"hour": 11, "rainfall_mm": 6.4},
+        {"hour": 12, "rainfall_mm": 2.8}
+      ],
+      "flood_reports": [
+        {"location": "Marikina Heights", "depth_m": 3.8, "duration_hours": 10},
+        {"location": "Commonwealth", "depth_m": 2.1, "duration_hours": 8},
+        {"location": "Project 8", "depth_m": 1.9, "duration_hours": 7},
+        {"location": "Diliman", "depth_m": 1.2, "duration_hours": 5}
+      ]
+    }
+  ],
+  "alert_thresholds": {
+    "yellow": {
+      "rainfall_mm_hr": 15,
+      "description": "Monitor weather conditions"
+    },
+    "orange": {
+      "rainfall_mm_hr": 30,
+      "description": "Prepare for possible flooding"
+    },
+    "red": {
+      "rainfall_mm_hr": 45,
+      "description": "Flooding expected, take necessary precautions"
+    }
+  },
+  "monitoring_parameters": {
+    "update_interval_minutes": 15,
+    "forecast_horizon_hours": 6,
+    "data_quality_rating": "A",
+    "calibration_date": "2024-01-15"
+  }
+}

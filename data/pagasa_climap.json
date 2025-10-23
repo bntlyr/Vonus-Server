@@ -1,0 +1,130 @@
+{
+  "data_source": "PAGASA Climate Map (Simulated)",
+  "region": "National Capital Region",
+  "city": "Quezon City",
+  "last_updated": "2024-10-23T10:00:00Z",
+  "rainfall_data": [
+    {
+      "barangay": "Barangay Commonwealth",
+      "coordinates": [14.7348, 121.0648],
+      "monthly_average_mm": {
+        "January": 15.2,
+        "February": 12.8,
+        "March": 18.5,
+        "April": 42.3,
+        "May": 125.7,
+        "June": 245.8,
+        "July": 398.2,
+        "August": 425.1,
+        "September": 315.6,
+        "October": 198.4,
+        "November": 85.2,
+        "December": 35.7
+      },
+      "annual_average_mm": 1918.5,
+      "peak_intensity_mm_hr": 45.2,
+      "flood_history": ["2012-08-07", "2018-09-15", "2020-11-12"]
+    },
+    {
+      "barangay": "Barangay Project 8",
+      "coordinates": [14.6760, 121.0437],
+      "monthly_average_mm": {
+        "January": 18.1,
+        "February": 14.2,
+        "March": 22.3,
+        "April": 38.7,
+        "May": 142.5,
+        "June": 268.3,
+        "July": 425.8,
+        "August": 445.2,
+        "September": 298.1,
+        "October": 175.3,
+        "November": 92.4,
+        "December": 28.9
+      },
+      "annual_average_mm": 1969.8,
+      "peak_intensity_mm_hr": 52.3,
+      "flood_history": ["2009-09-26", "2013-08-19", "2020-11-12"]
+    },
+    {
+      "barangay": "Barangay Diliman",
+      "coordinates": [14.6507, 121.0681],
+      "monthly_average_mm": {
+        "January": 12.8,
+        "February": 9.5,
+        "March": 15.7,
+        "April": 35.2,
+        "May": 118.9,
+        "June": 235.7,
+        "July": 385.4,
+        "August": 412.8,
+        "September": 285.3,
+        "October": 162.1,
+        "November": 78.6,
+        "December": 22.4
+      },
+      "annual_average_mm": 1774.4,
+      "peak_intensity_mm_hr": 38.7,
+      "flood_history": ["2011-09-27", "2013-08-19"]
+    },
+    {
+      "barangay": "Barangay Fairview",
+      "coordinates": [14.7569, 121.0598],
+      "monthly_average_mm": {
+        "January": 16.8,
+        "February": 13.9,
+        "March": 20.1,
+        "April": 45.8,
+        "May": 135.2,
+        "June": 258.4,
+        "July": 412.6,
+        "August": 438.9,
+        "September": 325.7,
+        "October": 189.3,
+        "November": 89.7,
+        "December": 32.1
+      },
+      "annual_average_mm": 1978.5,
+      "peak_intensity_mm_hr": 48.9,
+      "flood_history": ["2012-08-07", "2018-09-15"]
+    },
+    {
+      "barangay": "Barangay Marikina Heights",
+      "coordinates": [14.6234, 121.1289],
+      "monthly_average_mm": {
+        "January": 19.3,
+        "February": 15.7,
+        "March": 24.8,
+        "April": 48.2,
+        "May": 158.4,
+        "June": 285.7,
+        "July": 445.8,
+        "August": 465.2,
+        "September": 342.1,
+        "October": 215.6,
+        "November": 105.3,
+        "December": 38.9
+      },
+      "annual_average_mm": 2165.0,
+      "peak_intensity_mm_hr": 55.7,
+      "flood_history": ["2009-09-26", "2012-08-07", "2018-09-15", "2020-11-12"]
+    }
+  ],
+  "climate_zones": [
+    {
+      "zone_name": "Northern Quezon City",
+      "risk_factor": "High",
+      "characteristics": "Higher elevation, prone to flash floods during heavy rainfall"
+    },
+    {
+      "zone_name": "Central Quezon City",
+      "risk_factor": "Medium",
+      "characteristics": "Mixed urban development, moderate drainage capacity"
+    },
+    {
+      "zone_name": "Eastern Quezon City",
+      "risk_factor": "High",
+      "characteristics": "Near Marikina River, historically flood-prone"
+    }
+  ]
+}
