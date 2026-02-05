@@ -7,7 +7,7 @@
   "flood_zones": [
     {
       "zone_id": "QC-FZ-001",
-      "barangay": "Barangay Commonwealthz",
+      "barangay": "Barangay Commonwealth",
       "city": "Quezon City",
       "province": "Metro Manila",
       "hazard_level": "High",
